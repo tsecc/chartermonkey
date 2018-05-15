@@ -20,7 +20,12 @@ func main() {
 	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
 		events, err := bot.ParseRequest(req) //events is []*Event
 		if err != nil {
-			log.Fatal(err)
+			if err == linebot.ErrInvalidSignature {
+				w.WriteHeader(400)
+			} else {
+				w.WriteHeader(500)
+			}
+			return
 		}
 		for _, event := range events { //event is *Event
 			if event.Type == linebot.EventTypeMessage { //"message" should be defined in /callback
