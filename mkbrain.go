@@ -54,7 +54,7 @@ func main() {
 						if err != nil {
 							log.Print(err)
 						}
-						date := time.Now().Format("2014-07-07")
+						date := time.Now().Local().Format("2014-07-07")
 						message.Text = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
