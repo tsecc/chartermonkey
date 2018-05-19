@@ -47,14 +47,14 @@ func main() {
 						if err != nil {
 							log.Print(err)
 						}
-						date := event.Postback.Params.Date
-						message.Text = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
+						message.Text = "好喔, " + profile.DisplayName + " +1, 吱吱"
 					} else if message.Text == "+1" && event.Source.GroupID == "" {
 						profile, err := bot.GetProfile(event.Source.UserID).Do()
 						if err != nil {
 							log.Print(err)
 						}
-						message.Text = "好喔, " + profile.DisplayName + " +1, 吱吱"
+						date := event.Postback.Params.Date
+						message.Text = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
 					if err != nil {
