@@ -26,7 +26,7 @@ var db *sql.DB
 
 //InitDB initialize a DB object
 func InitDB() {
-	host := os.Getenv("DATABASE_URL")
+	host := os.Getenv("DB_URL")
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	var err error
