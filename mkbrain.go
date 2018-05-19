@@ -1,14 +1,45 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
+const (
+	host     = "ec2-23-23-130-158.compute-1.amazonaws.com"
+	port     = 5432
+	user     = "eqhagpctrbrinp"
+	password = "d7251e298543dcfaab18324c787e3bc5ba0b987156d19dfe7107bee0094b3ce2"
+	dbname   = "d59v5g8s8r2n4v"
+)
+
 func main() {
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Printf("DB connected")
+	}
+	defer db.Close()
+
+	// query := `SELECT data FROM reservation WHERE data @> '{"date": "2018-05-24"}'`
+	// var result string
+	// err = db.QueryRow(query).Scan(&result)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Printf(result)
+
 	bot, err := linebot.New(
 		os.Getenv("CHANNEL_SECRET"),
 		os.Getenv("CHANNEL_TOKEN"),
