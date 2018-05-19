@@ -1,6 +1,7 @@
 package main
 
 import (
+	"chartermonkey/mknote"
 	"database/sql"
 	"fmt"
 	"log"
@@ -57,13 +58,7 @@ func main() {
 					if message.Text == "恰特猴" {
 						message.Text = "幹嘛~?"
 					} else if message.Text == "list" {
-						query := `SELECT data FROM reservation WHERE data @> '{"date": "2018-05-24"}'`
-						var result string
-						err = db.QueryRow(query).Scan(&result)
-						if err != nil {
-							panic(err)
-						}
-						message.Text = result
+						message.Text = mknote.query()
 					} else if message.Text == "本週+1" && event.Source.GroupID != "" {
 						profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 						if err != nil {
