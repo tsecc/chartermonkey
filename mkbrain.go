@@ -32,14 +32,6 @@ func main() {
 	}
 	defer db.Close()
 
-	// query := `SELECT data FROM reservation WHERE data @> '{"date": "2018-05-24"}'`
-	// var result string
-	// err = db.QueryRow(query).Scan(&result)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Printf(result)
-
 	bot, err := linebot.New(
 		os.Getenv("CHANNEL_SECRET"),
 		os.Getenv("CHANNEL_TOKEN"),
@@ -64,6 +56,14 @@ func main() {
 				case *linebot.TextMessage:
 					if message.Text == "恰特猴" {
 						message.Text = "幹嘛~?"
+					} else if message.Text == "list" {
+						query := `SELECT data FROM reservation WHERE data @> '{"date": "2018-05-24"}'`
+						var result string
+						err = db.QueryRow(query).Scan(&result)
+						if err != nil {
+							panic(err)
+						}
+						message.Text = result
 					} else if message.Text == "本週+1" {
 						profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 						if err != nil {
