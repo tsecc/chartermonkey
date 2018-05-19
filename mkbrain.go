@@ -65,12 +65,16 @@ func main() {
 						}
 						message.Text = result
 					} else if message.Text == "本週+1" {
-						// profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
-						// if err != nil {
-						// 	log.Print(err)
-						// }
-						// message.Text = "好喔, 本週 " + profile.DisplayName + " +1, 吱吱"
-						message.Text = "好喔,吱吱"
+						profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
+						if err != nil {
+							log.Print(err)
+						}
+						profile2, err2 := bot.GetProfile(event.Source.UserID).Do()
+						if err2 != nil {
+							log.Print(err)
+						}
+						message.Text = "好喔, 本週 " + profile2.DisplayName + " +1, 吱吱"
+						message.Text = "好喔, 本週 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
 					if err != nil {
