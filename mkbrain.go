@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -53,7 +54,7 @@ func main() {
 						if err != nil {
 							log.Print(err)
 						}
-						date := event.Postback.Params.Datetime
+						date := time.Now().Format("2014-07-07")
 						message.Text = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
