@@ -3,10 +3,11 @@ package mknote
 import (
 	"database/sql"
 	"fmt"
+	"os"
 )
 
 const (
-	host     = "ec2-23-23-130-158.compute-1.amazonaws.com"
+	//host     = "ec2-23-23-130-158.compute-1.amazonaws.com"
 	port     = 5432
 	user     = "eqhagpctrbrinp"
 	password = "d7251e298543dcfaab18324c787e3bc5ba0b987156d19dfe7107bee0094b3ce2"
@@ -25,6 +26,7 @@ var db *sql.DB
 
 //InitDB initialize a DB object
 func InitDB() {
+	host := os.Getenv("DATABASE_URL")
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	var err error
