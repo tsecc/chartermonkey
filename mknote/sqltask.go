@@ -6,13 +6,13 @@ import (
 	"os"
 )
 
-const (
-	//host     = "ec2-23-23-130-158.compute-1.amazonaws.com"
-	port     = 5432
-	user     = "eqhagpctrbrinp"
-	password = "d7251e298543dcfaab18324c787e3bc5ba0b987156d19dfe7107bee0094b3ce2"
-	dbname   = "d59v5g8s8r2n4v"
-)
+// const (
+// 	//host     = "ec2-23-23-130-158.compute-1.amazonaws.com"
+// 	//port     = 5432
+// 	user     = "eqhagpctrbrinp"
+// 	password = "d7251e298543dcfaab18324c787e3bc5ba0b987156d19dfe7107bee0094b3ce2"
+// 	dbname   = "d59v5g8s8r2n4v"
+// )
 
 // const (
 // 	host     = "localhost"
@@ -27,7 +27,11 @@ var db *sql.DB
 //InitDB initialize a DB object
 func InitDB() {
 	host := os.Getenv("DB_URL")
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWD")
+	dbname := os.Getenv("DB_NAME")
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	var err error
 	db, err = sql.Open("postgres", psqlInfo)
