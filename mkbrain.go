@@ -58,7 +58,7 @@ func main() {
 					if message.Text == "恰特猴" {
 						message.Text = "幹嘛~?"
 					} else if message.Text == "list" {
-						message.Text = mknote.query()
+						message.Text = mknote.Query()
 					} else if message.Text == "本週+1" && event.Source.GroupID != "" {
 						profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 						if err != nil {
