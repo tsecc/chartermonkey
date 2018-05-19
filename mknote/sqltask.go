@@ -40,7 +40,6 @@ func Query() string {
 	query := `SELECT data FROM reservation WHERE data @> '{"date": "2018-05-24"}'`
 	var result string
 
-	// err := db.QueryRow(query).Scan(&result)
 	rows, err := db.Query(query)
 	if err != nil {
 		panic(err)

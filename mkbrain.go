@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -39,30 +38,12 @@ func main() {
 			if event.Type == linebot.EventTypeMessage { //"message" should be defined in /callback
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					if message.Text == "恰特猴" {
-						message.Text = "幹嘛~?"
-					} else if message.Text == "list" {
-						message.Text = mknote.Query()
-					} else if message.Text == "+1" && event.Source.GroupID != "" {
-						profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
-						if err != nil {
-							log.Print(err)
-						}
-						message.Text = "好喔, " + profile.DisplayName + " +1, 吱吱"
-					} else if message.Text == "+1" && event.Source.GroupID == "" {
-						profile, err := bot.GetProfile(event.Source.UserID).Do()
-						if err != nil {
-							log.Print(err)
-						}
-						date := time.Now().Local().Format("2014-07-07")
-						message.Text = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
-					}
+					message.Text = reply(message.Text, event, bot)
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
 					if err != nil {
 						log.Print(err)
 					}
 				}
-
 			}
 		}
 	})
