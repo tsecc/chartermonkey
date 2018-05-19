@@ -64,12 +64,18 @@ func main() {
 							panic(err)
 						}
 						message.Text = result
-					} else if message.Text == "本週+1" {
+					} else if message.Text == "本週+1" && event.Source.GroupID != "" {
 						profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 						if err != nil {
 							log.Print(err)
 						}
-						message.Text = "好喔, 我在" + event.Source.GroupID + ", 本週 " + profile.DisplayName + " +1, 吱吱"
+						message.Text = "好喔, 本週 " + profile.DisplayName + " +1, 吱吱"
+					} else if message.Text == "本週+1" && event.Source.GroupID == "" {
+						profile, err := bot.GetProfile(event.Source.UserID).Do()
+						if err != nil {
+							log.Print(err)
+						}
+						message.Text = "好喔, 本週 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
 					if err != nil {
