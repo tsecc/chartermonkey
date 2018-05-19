@@ -69,12 +69,7 @@ func main() {
 						if err != nil {
 							log.Print(err)
 						}
-						profile2, err2 := bot.GetProfile(event.Source.UserID).Do()
-						if err2 != nil {
-							log.Print(err)
-						}
-						message.Text = "好喔, 本週 " + profile2.DisplayName + " +1, 吱吱"
-						message.Text = "好喔, 本週 " + profile.DisplayName + " +1, 吱吱"
+						message.Text = "好喔, 我在" + event.Source.GroupID + ", 本週 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
 					if err != nil {
