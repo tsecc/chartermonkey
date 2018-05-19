@@ -2,6 +2,7 @@ package main
 
 import (
 	"chartermonkey/mknote"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -54,6 +55,7 @@ func main() {
 							log.Print(err)
 						}
 						date := event.Postback.Params.Date
+						fmt.Println(date)
 						message.Text = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
 					}
 					_, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do()
