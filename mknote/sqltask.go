@@ -33,8 +33,10 @@ func Add(profile string) (result string) { //need to add err handling, return st
 	//STEP 2: update reservation set data = jsonb_set(data, '{name_list, 999999}', '"JH"', TRUE) where data->>'date'='2018-05-31';
 	addQuery := "update reservation set data = jsonb_set(data, '{name_list, 999999}', '\"" + profile + "\"', TRUE) where data->>'date'='2018-05-31'"
 
-	db.QueryRow(addQuery).Scan(&result)
-
+	err := db.QueryRow(addQuery).Scan(&result)
+	if err != nil {
+		panic(err)
+	}
 	return result
 
 }
