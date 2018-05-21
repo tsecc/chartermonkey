@@ -3,6 +3,7 @@ package mknote
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -28,17 +29,22 @@ func InitDB() {
 }
 
 //Add the profile on the list
-func Add(profile string) (result string) { //need to add err handling, return sth.
+func Add(profile string) int64 { //need to add err handling, return sth.
 	//STEP 1: check for duplication
 	//STEP 2: update reservation set data = jsonb_set(data, '{name_list, 999999}', '"JH"', TRUE) where data->>'date'='2018-05-31';
-	addQuery := "update reservation set data = jsonb_set(data, '{name_list, 999999}', '\"" + profile + "\"', TRUE) where data->>'date'='2018-05-31'"
+	addQuery := `update reservation set data = jsonb_set(data, '{name_list, 999999}', '"` + profile + `"', TRUE) where data->>'date'='2018-05-24'`
 
-	err := db.QueryRow(addQuery).Scan(&result)
+	result, err := db.Exec(addQuery)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	return result
+	rowCount, err := result.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(rowCount)
 
+	return rowCount
 }
 
 func del(profile string) {
