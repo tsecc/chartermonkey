@@ -26,8 +26,9 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			log.Print(err)
 		}
 		result := mknote.Add(profile.DisplayName)
+		log.Printf("%d", result)
 		//date := time.Now().Local().Format("2014-07-07")
-		reply = "好喔, " + profile.DisplayName + " +1, 資料庫新增結果是" + result + ", 吱吱"
+		reply = "好喔, " + profile.DisplayName + " +1, 吱吱"
 	} else {
 		reply = "吱吱, 我聽不懂哦"
 	}

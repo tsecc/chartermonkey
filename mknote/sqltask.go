@@ -42,7 +42,7 @@ func Add(profile string) int64 { //need to add err handling, return sth.
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(rowCount)
+	//log.Println(rowCount)
 
 	return rowCount
 }
