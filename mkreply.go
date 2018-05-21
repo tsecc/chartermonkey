@@ -19,12 +19,14 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 		if err != nil {
 			log.Print(err)
 		}
+		mknote.Add(profile.DisplayName) //need to verify data is added
 		reply = "好喔, " + profile.DisplayName + " +1, 吱吱"
 	} else if message == "+1" && event.Source.GroupID == "" {
 		profile, err := bot.GetProfile(event.Source.UserID).Do()
 		if err != nil {
 			log.Print(err)
 		}
+		mknote.Add(profile.DisplayName) //need to verify data is added
 		date := time.Now().Local().Format("2014-07-07")
 		reply = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
 	} else {
