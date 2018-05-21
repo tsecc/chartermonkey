@@ -3,7 +3,6 @@ package main
 import (
 	"chartermonkey/mknote"
 	"log"
-	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -26,9 +25,9 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 		if err != nil {
 			log.Print(err)
 		}
-		mknote.Add(profile.DisplayName) //need to verify data is added
-		date := time.Now().Local().Format("2014-07-07")
-		reply = "好喔, 今天是" + date + ", 下次 " + profile.DisplayName + " +1, 吱吱"
+		result := mknote.Add(profile.DisplayName) //need to verify data is added
+		//date := time.Now().Local().Format("2014-07-07")
+		reply = "好喔, " + profile.DisplayName + " +1, 資料庫新增結果是" + result + ", 吱吱"
 	} else {
 		reply = "吱吱, 我聽不懂哦"
 	}
