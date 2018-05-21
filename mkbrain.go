@@ -14,8 +14,6 @@ func main() {
 
 	mknote.InitDB()
 
-	mknote.Query()
-
 	bot, err := linebot.New(
 		os.Getenv("CHANNEL_SECRET"),
 		os.Getenv("CHANNEL_TOKEN"),
