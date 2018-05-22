@@ -81,15 +81,15 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 }
 
 func assembleReply(tplID string, name string) string {
-	var reply string
 	var bytedata bytes.Buffer
 	tmpl, err := template.ParseFiles("message.tpl")
 	if err != nil {
 		panic(err)
 	}
-	tmpl.ExecuteTemplate(&bytedata, tplID, name)
+	err = tmpl.ExecuteTemplate(&bytedata, tplID, name)
 	if err != nil {
 		panic(err)
 	}
+	reply := bytedata.String()
 	return reply
 }
