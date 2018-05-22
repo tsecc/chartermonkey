@@ -17,7 +17,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	case "list":
 		reply = mknote.Query()
 	case "+1":
-		if event.Source.GroupID == "" {
+		if event.Source.GroupID != "" {
 			//group add
 			profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 			if err != nil {
