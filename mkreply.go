@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"chartermonkey/mknote"
+	"html/template"
 	"log"
 
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -18,8 +20,24 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 		if err != nil {
 			log.Print(err)
 		}
-		mknote.Add(profile.DisplayName) //need to verify data is added
-		reply = "好喔, " + profile.DisplayName + " +1, 吱吱"
+		resultBool := mknote.Add(profile.DisplayName) //returned a in64 1=added, 0=failed
+		tmpl, err := template.ParseFiles("message.tpl")
+		if err != nil {
+			panic(err)
+		}
+
+		tmplname := "failed" //default to failed if SQL update has failed
+		if resultBool == 1 {
+			tmplname = "plusone"
+		}
+
+		var bytedata bytes.Buffer
+		tmpl.ExecuteTemplate(&bytedata, tmplname, profile.DisplayName)
+		if err != nil {
+			panic(err)
+		}
+		reply = bytedata.String()
+		//reply = "好喔, " + profile.DisplayName + " +1, 吱吱"
 	} else if message == "+1" && event.Source.GroupID == "" {
 		profile, err := bot.GetProfile(event.Source.UserID).Do()
 		if err != nil {
