@@ -17,7 +17,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	case "list":
 		reply = mknote.Query()
 	case "+1":
-		if event.Source.GroupID != "" {
+		if event.Source.GroupID == "" {
 			//group add
 			profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 			if err != nil {
@@ -29,14 +29,17 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			if resultBool == 1 {
 				tplID = "plusone"
 			}
+			log.Print(tplID)
 
 			reply = assembleReply(tplID, profile.DisplayName)
 			log.Print(reply)
 		} else {
 			//personal add, shouldn't happen...only for admin.
-			reply = "建議不要私底下揪團哦~吱吱"
+			reply = "團體功能還沒開放哦~吱吱"
 		}
 	}
+
+	return reply
 
 	// if message == "恰特猴" {
 	// 	reply = "幹嘛~?"
@@ -77,7 +80,6 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	// 	reply = "吱吱, 我聽不懂哦"
 	// }
 
-	return reply
 }
 
 func assembleReply(tplID string, name string) string {
