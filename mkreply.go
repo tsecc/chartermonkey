@@ -19,7 +19,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	case "+1":
 		if event.Source.GroupID == "" {
 			//group add
-			profile, err := bot.GetProfile(event.Source.UserID).Do()
+			profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 			if err != nil {
 				log.Print(err)
 			}
@@ -36,7 +36,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			log.Print(reply)
 		} else {
 			//personal add, shouldn't happen...only for admin.
-			reply = "團體功能還沒開放哦~吱吱"
+			reply = "建議不要私底下揪團~吱吱"
 		}
 	}
 
