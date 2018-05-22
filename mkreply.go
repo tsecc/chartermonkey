@@ -31,6 +31,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			}
 
 			reply = assembleReply(tplID, profile.DisplayName)
+			log.Fatal(reply)
 		} else {
 			//personal add, shouldn't happen...only for admin.
 			reply = "建議不要私底下揪團哦~吱吱"
