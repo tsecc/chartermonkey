@@ -89,7 +89,7 @@ func assembleReply(tplID string, myProfile Profile) string {
 	if err != nil {
 		panic(err)
 	}
-	err = tmpl.ExecuteTemplate(&bytedata, tplID, myProfile.name)
+	err = tmpl.ExecuteTemplate(&bytedata, tplID, myProfile.Name)
 	if err != nil {
 		panic(err)
 	}
