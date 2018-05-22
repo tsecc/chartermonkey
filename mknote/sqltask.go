@@ -1,13 +1,20 @@
 package mknote
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 )
 
 var db *sql.DB
+
+//Profile name for display
+type Profile struct {
+	Displayname string
+}
 
 //InitDB initialize a DB object
 func InitDB() {
@@ -29,10 +36,12 @@ func InitDB() {
 }
 
 //Add the profile on the list
-func Add(profile string) int64 { //need to add err handling, return sth.
+func Add(profile string) (reply string) { //need to add err handling, return sth.
 	//STEP 1: check for duplication
 	//STEP 2: update reservation set data = jsonb_set(data, '{name_list, 999999}', '"JH"', TRUE) where data->>'date'='2018-05-31';
-	addQuery := `update reservation set data = jsonb_set(data, '{name_list, 999999}', '"` + profile + `"', TRUE) where data->>'date'='2018-05-24'`
+	name := Profile{profile}
+	//	addQuery := "update reservation set data = jsonb_set(data, '{name_list, 999999}', '\"" + name.Displayname + "\"', TRUE) where data->>'date'='2018-05-31'"
+	addQuery := "update reservation set data = jsonb_set(data, '{name_list, 999999}', '\"" + name.Displayname + "\"', TRUE) where data->>'date'='2018-05-31'"
 
 	result, err := db.Exec(addQuery)
 	if err != nil {
@@ -42,9 +51,28 @@ func Add(profile string) int64 { //need to add err handling, return sth.
 	if err != nil {
 		log.Fatal(err)
 	}
-	//log.Println(rowCount)
+	log.Println(rowCount)
+	tmpl, err := template.ParseFiles("message.tpl")
+	if err != nil {
+		panic(err)
+	}
 
-	return rowCount
+	var bytedata bytes.Buffer
+	var tmplname string
+
+	if rowCount == 1 {
+		tmplname = "plusone"
+	} else {
+		tmplname = "failed"
+	}
+
+	tmpl.ExecuteTemplate(&bytedata, tmplname, name)
+	if err != nil {
+		panic(err)
+	}
+	reply = bytedata.String()
+
+	return reply
 }
 
 func del(profile string) {
