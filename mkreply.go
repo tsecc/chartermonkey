@@ -31,7 +31,8 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			}
 			log.Print(tplID)
 
-			reply = assembleReply(tplID, profile.DisplayName)
+			myProfile := Profile{profile.DisplayName}
+			reply = assembleReply(tplID, myProfile)
 			log.Print(reply)
 		} else {
 			//personal add, shouldn't happen...only for admin.
@@ -82,13 +83,13 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 
 }
 
-func assembleReply(tplID string, name string) string {
+func assembleReply(tplID string, myProfile Profile) string {
 	var bytedata bytes.Buffer
 	tmpl, err := template.ParseFiles("message.tpl")
 	if err != nil {
 		panic(err)
 	}
-	err = tmpl.ExecuteTemplate(&bytedata, tplID, name)
+	err = tmpl.ExecuteTemplate(&bytedata, tplID, myProfile.name)
 	if err != nil {
 		panic(err)
 	}
