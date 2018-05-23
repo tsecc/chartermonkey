@@ -23,7 +23,8 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 		//reply = "幹嘛~?" //need to use tmpl
 		replyInfo.TplID = "wazup"
 	case "list":
-		reply = mknote.Query()
+		replyInfo.Name = mknote.Query()
+		replyInfo.TplID = "list"
 	case "+1":
 		if event.Source.GroupID != "" {
 			//group add
