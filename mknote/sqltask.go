@@ -73,7 +73,6 @@ func Query() string {
 			panic(err)
 		}
 	}
-	//fmt.Println(result)
 	tmp := ResultSet{result}
 	resultSet = append(resultSet, tmp)
 
