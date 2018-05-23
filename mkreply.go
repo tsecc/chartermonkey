@@ -17,7 +17,7 @@ type ReplyInfo struct {
 
 //Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
-	replyInfo := ReplyInfo{}
+	replyInfo := ReplyInfo{"", ""}
 	switch message {
 	case "恰特猴":
 		replyInfo.TplID = "wazup"
@@ -45,7 +45,8 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			replyInfo.TplID = "reject"
 		}
 	default:
-		reply = ""
+		//reply = ""
+		return reply
 	}
 	reply = assembleReply(replyInfo)
 	return reply
