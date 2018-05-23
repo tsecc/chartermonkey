@@ -7,6 +7,11 @@ import (
 	"os"
 )
 
+//ResultSet stores result
+type ResultSet struct {
+	Name string
+}
+
 var db *sql.DB
 
 //InitDB initialize a DB object
@@ -52,8 +57,9 @@ func del(profile string) {
 
 //Query queries specific week for the attendees
 func Query() string {
-	query := `SELECT data FROM reservation WHERE data @> '{"date": "2018-06-07"}'`
+	query := `SELECT jsonb_array_elements_text(data->'name_list') as name FROM reservation WHERE data @> '{"date": "2018-05-31"}';`
 	var result string
+	resultSet := []ResultSet{}
 
 	rows, err := db.Query(query)
 	if err != nil {
@@ -67,6 +73,9 @@ func Query() string {
 			panic(err)
 		}
 	}
+	//fmt.Println(result)
+	tmp := ResultSet{result}
+	resultSet = append(resultSet, tmp)
 
 	return result
 }

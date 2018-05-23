@@ -9,12 +9,6 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
-//ReplyInfo structured a person profile and the ID for bot's reply
-type ReplyInfo struct {
-	TplID string
-	Name  string
-}
-
 //Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
 	replyInfo := ReplyInfo{"", ""}
