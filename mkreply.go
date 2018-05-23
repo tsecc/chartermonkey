@@ -9,11 +9,19 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
+//ReplyInfo structured a person profile and the ID for bot's reply
+type ReplyInfo struct {
+	TplID string
+	Name  string
+}
+
 //Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
+	replyInfo := ReplyInfo{}
 	switch message {
 	case "恰特猴":
-		reply = "幹嘛~?" //need to use tmpl
+		//reply = "幹嘛~?" //need to use tmpl
+		replyInfo.TplID = "wazup"
 	case "list":
 		reply = mknote.Query()
 	case "+1":
@@ -24,32 +32,30 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 				log.Print(err)
 			}
 
-			resultBool := mknote.Add(profile.DisplayName) //returned a in64 1=added, 0=failed
-			tplID := "failed"                             //default to failed if SQL update has failed
+			resultBool := mknote.Add(profile.DisplayName) //run DB update and return in64, 1=added, 0=failed
+			replyInfo.Name = profile.DisplayName
 			if resultBool == 1 {
-				tplID = "plusone"
+				replyInfo.TplID = "plusone"
+			} else {
+				replyInfo.TplID = "failed"
 			}
-			log.Print(tplID)
-
-			name := Profile{profile.DisplayName}
-			reply = assembleReply(tplID, name)
-			log.Print(reply)
+			log.Print(replyInfo.TplID)
 		} else {
 			//personal add, shouldn't happen...only for admin.
 			reply = "建議不要私底下揪團~吱吱" //need to use tmpl
 		}
 	}
-
+	reply = assembleReply(replyInfo)
 	return reply
 }
 
-func assembleReply(tplID string, myProfile Profile) string {
+func assembleReply(info ReplyInfo) string {
 	var bytedata bytes.Buffer
 	tmpl, err := template.ParseFiles("message.tpl")
 	if err != nil {
 		panic(err)
 	}
-	err = tmpl.ExecuteTemplate(&bytedata, tplID, myProfile)
+	err = tmpl.ExecuteTemplate(&bytedata, info.TplID, info.Name)
 	if err != nil {
 		panic(err)
 	}
