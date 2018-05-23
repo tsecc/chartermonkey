@@ -9,7 +9,7 @@ import (
 
 //ResultSet stores result
 type ResultSet struct {
-	Name string
+	Namelist string
 }
 
 var db *sql.DB
