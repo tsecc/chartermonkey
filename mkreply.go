@@ -29,17 +29,21 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			if err != nil {
 				log.Print(err)
 			}
-
-			resultBool := mknote.Add(profile.DisplayName) //run DB update and return in64, 1=added, 0=failed
 			replyInfo.Name = profile.DisplayName
-			if resultBool == 1 {
-				replyInfo.TplID = "plusone"
+			ex := checkExists(profile.DisplayName)
+			if ex != false {
+				//run DB update and return in64, 1=added, 0=failed
+				resultBool := mknote.Add(profile.DisplayName)
+				if resultBool == 1 {
+					replyInfo.TplID = "plusone"
+				} else {
+					replyInfo.TplID = "failed"
+				}
 			} else {
-				replyInfo.TplID = "failed"
+				replyInfo.TplID = "duplicate"
 			}
-			log.Print(replyInfo.TplID)
 		} else {
-			//personal add, shouldn't happen...or only for admin.
+			//personal +1, shouldn't happen.
 			replyInfo.TplID = "reject"
 		}
 		reply = assembleReply(replyInfo)
@@ -48,6 +52,11 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	}
 
 	return reply
+}
+
+func checkExists(name string) bool {
+	//need to query for existance check
+	return true
 }
 
 func assembleReply(info ReplyInfo) string {
