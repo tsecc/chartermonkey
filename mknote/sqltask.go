@@ -57,7 +57,7 @@ func del(profile string) {
 
 //Query queries specific week for the attendees
 func Query() []ResultSet {
-	query := `SELECT jsonb_array_elements_text(data->'name_list') as name FROM reservation WHERE data @> '{"date": "2018-05-31"}';`
+	query := `SELECT jsonb_array_elements_text(data->'name_list') as name FROM reservation WHERE data @> '{"date": "2018-06-07"}';`
 	var result string
 	resultSet := []ResultSet{}
 
