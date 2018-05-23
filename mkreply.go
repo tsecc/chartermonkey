@@ -43,7 +43,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			log.Print(replyInfo.TplID)
 		} else {
 			//personal add, shouldn't happen...only for admin.
-			reply = "建議不要私底下揪團~吱吱" //need to use tmpl
+			replyInfo.TplID = "reject"
 		}
 	}
 	reply = assembleReply(replyInfo)
