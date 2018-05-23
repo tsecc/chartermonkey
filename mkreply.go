@@ -56,7 +56,7 @@ func assembleReply(info ReplyInfo) string {
 	if err != nil {
 		panic(err)
 	}
-	err = tmpl.ExecuteTemplate(&bytedata, info.TplID, info.Name)
+	err = tmpl.ExecuteTemplate(&bytedata, info.TplID, info)
 	if err != nil {
 		panic(err)
 	}
