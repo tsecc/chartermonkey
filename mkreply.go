@@ -20,7 +20,6 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	replyInfo := ReplyInfo{}
 	switch message {
 	case "恰特猴":
-		//reply = "幹嘛~?" //need to use tmpl
 		replyInfo.TplID = "wazup"
 	case "list":
 		replyInfo.Name = mknote.Query()
@@ -42,9 +41,11 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			}
 			log.Print(replyInfo.TplID)
 		} else {
-			//personal add, shouldn't happen...only for admin.
+			//personal add, shouldn't happen...or only for admin.
 			replyInfo.TplID = "reject"
 		}
+	default:
+		reply = ""
 	}
 	reply = assembleReply(replyInfo)
 	return reply
