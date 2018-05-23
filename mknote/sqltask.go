@@ -72,9 +72,9 @@ func Query() []ResultSet {
 		if err != nil {
 			panic(err)
 		}
+		tmp := ResultSet{result}
+		resultSet = append(resultSet, tmp)
 	}
-	tmp := ResultSet{result}
-	resultSet = append(resultSet, tmp)
 
 	return resultSet
 }
