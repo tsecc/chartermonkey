@@ -10,3 +10,8 @@ type ReplyInfo struct {
 	TplID string
 	Name  string
 }
+
+// //ResultSet stores result
+// type ResultSet struct {
+// 	Name string
+// }

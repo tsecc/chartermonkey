@@ -12,12 +12,16 @@ import (
 //Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
 	replyInfo := ReplyInfo{"", ""}
+
+	resultset := []mknote.ResultSet{}
 	switch message {
 	case "恰特猴":
 		replyInfo.TplID = "wazup"
+		reply = assembleReply(replyInfo)
 	case "list":
-		replyInfo.Name = mknote.Query()
+		resultset = mknote.Query()
 		replyInfo.TplID = "list"
+		reply = assembleList(replyInfo, resultset)
 	case "+1":
 		if event.Source.GroupID != "" {
 			//group add
@@ -38,11 +42,11 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			//personal add, shouldn't happen...or only for admin.
 			replyInfo.TplID = "reject"
 		}
+		reply = assembleReply(replyInfo)
 	default:
-		//reply = ""
-		return reply
+		reply = ""
 	}
-	reply = assembleReply(replyInfo)
+
 	return reply
 }
 
@@ -53,6 +57,19 @@ func assembleReply(info ReplyInfo) string {
 		panic(err)
 	}
 	err = tmpl.ExecuteTemplate(&bytedata, info.TplID, info)
+	if err != nil {
+		panic(err)
+	}
+	reply := bytedata.String()
+	return reply
+}
+func assembleList(info ReplyInfo, resultset []mknote.ResultSet) string {
+	var bytedata bytes.Buffer
+	tmpl, err := template.ParseFiles("message.tpl")
+	if err != nil {
+		panic(err)
+	}
+	err = tmpl.ExecuteTemplate(&bytedata, info.TplID, resultset)
 	if err != nil {
 		panic(err)
 	}
