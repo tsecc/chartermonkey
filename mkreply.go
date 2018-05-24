@@ -56,6 +56,12 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 
 func checkExists(name string) bool {
 	//need to query for existance check
+	resultset := mknote.Query()
+	for _, a := range resultset {
+		if a.Namelist == name {
+			return false
+		}
+	}
 	return true
 }
 

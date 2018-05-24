@@ -36,7 +36,7 @@ func InitDB() {
 //Add the profile on the list
 func Add(profileName string) int64 {
 	//STEP 1: check for duplication
-	addQuery := "update reservation set data = jsonb_set(data, '{name_list, 999999}', '\"" + profileName + "\"', TRUE) where data->>'date'='2018-06-07'"
+	addQuery := "UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '\"" + profileName + "\"', TRUE) WHERE data->>'date'='2018-06-07'"
 
 	result, err := db.Exec(addQuery)
 	if err != nil {
@@ -52,7 +52,7 @@ func Add(profileName string) int64 {
 }
 
 func del(profile string) {
-
+	//UPDATE reservation SET data=data #- '{name_list, 1}' WHERE data @> '{"date": "2018-05-31"}';
 }
 
 //Query queries specific week for the attendees
