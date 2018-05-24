@@ -9,6 +9,10 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
+const (
+	date = "2018-06-07"
+)
+
 //Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
 	replyInfo := ReplyInfo{"", ""}
@@ -19,7 +23,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 		replyInfo.TplID = "wazup"
 		reply = assembleReply(replyInfo)
 	case "list":
-		resultset = mknote.Query()
+		resultset = mknote.Query(date)
 		replyInfo.TplID = "list"
 		reply = assembleList(replyInfo, resultset)
 	case "+1":
@@ -33,7 +37,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 			ex := checkExists(profile.DisplayName)
 			if ex != false {
 				//run DB update and return in64, 1=added, 0=failed
-				resultBool := mknote.Add(profile.DisplayName)
+				resultBool := mknote.Add(profile.DisplayName, date)
 				if resultBool == 1 {
 					replyInfo.TplID = "plusone"
 				} else {
@@ -56,7 +60,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 
 func checkExists(name string) bool {
 	//need to query for existance check
-	resultset := mknote.Query()
+	resultset := mknote.Query(date)
 	for _, a := range resultset {
 		if a.Namelist == name {
 			return false

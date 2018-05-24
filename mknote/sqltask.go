@@ -34,9 +34,9 @@ func InitDB() {
 }
 
 //Add the profile on the list
-func Add(profileName string) int64 {
+func Add(profileName string, date string) int64 {
 	//STEP 1: check for duplication
-	addQuery := "UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '\"" + profileName + "\"', TRUE) WHERE data->>'date'='2018-06-07'"
+	addQuery := "UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '\"" + profileName + "\"', TRUE) WHERE data->>'date'='\"" + date + "\"'"
 
 	result, err := db.Exec(addQuery)
 	if err != nil {
@@ -52,12 +52,13 @@ func Add(profileName string) int64 {
 }
 
 func del(profile string) {
-	//UPDATE reservation SET data=data #- '{name_list, 1}' WHERE data @> '{"date": "2018-05-31"}';
+	//UPDATE reservation SET data=data - '{name_list, "FreddyChen"}' WHERE data @> '{"date": "2018-06-07"}';
 }
 
 //Query queries specific week for the attendees
-func Query() []ResultSet {
-	query := `SELECT jsonb_array_elements_text(data->'name_list') as name FROM reservation WHERE data @> '{"date": "2018-06-07"}';`
+func Query(date string) []ResultSet {
+	date = "2018-06-07"
+	query := `SELECT jsonb_array_elements_text(data->'name_list') as name FROM reservation WHERE data @> '{"date": "` + date + `"}';`
 	var result string
 	resultSet := []ResultSet{}
 
@@ -75,6 +76,5 @@ func Query() []ResultSet {
 		tmp := ResultSet{result}
 		resultSet = append(resultSet, tmp)
 	}
-
 	return resultSet
 }
