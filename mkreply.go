@@ -5,19 +5,22 @@ import (
 	"chartermonkey/mknote"
 	"html/template"
 	"log"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 const (
-	date = "2018-06-07"
+	dateFormat = "2006-01-02"
+	sessionDay = 4 //usually play on Thursday
 )
 
 //Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
+	date := getNextSession()
 	replyInfo := ReplyInfo{"", ""}
-
 	resultset := []mknote.ResultSet{}
+
 	switch message {
 	case "恰特猴":
 		replyInfo.TplID = "wazup"
@@ -34,7 +37,7 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 				log.Print(err)
 			}
 			replyInfo.Name = profile.DisplayName
-			ex := checkExists(profile.DisplayName)
+			ex := checkExists(profile.DisplayName, date)
 			if ex != false {
 				//run DB update and return in64, 1=added, 0=failed
 				resultBool := mknote.Add(profile.DisplayName, date)
@@ -58,7 +61,24 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 	return reply
 }
 
-func checkExists(name string) bool {
+//this func compare current day, get the next target date
+func getNextSession() (targetDate string) {
+	today := time.Now().AddDate(0, 0, 0)
+	intOfToday := int(today.Weekday())
+	// fmt.Println("Today is ", today.Format("2006-01-02"))
+	// fmt.Println("Day code is", intOfToday)
+	var addTo int
+	if intOfToday > sessionDay {
+		addTo = 4 - intOfToday + 7
+	} else {
+		addTo = 4 - intOfToday
+	}
+	targetDate = today.AddDate(0, 0, addTo).Format("2006-01-02")
+	//fmt.Println("addTo is ", addTo, ",Next Session is on", targetDate)
+	return targetDate
+}
+
+func checkExists(name string, date string) bool {
 	//need to query for existance check
 	resultset := mknote.Query(date)
 	for _, a := range resultset {
