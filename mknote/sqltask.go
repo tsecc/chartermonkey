@@ -36,7 +36,7 @@ func InitDB() {
 //Add the profile on the list
 func Add(profileName string, date string) int64 {
 	//STEP 1: check for duplication
-	addQuery := `UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '"` + profileName + `"', TRUE) WHERE data->>'date'='"` + date + `"'`
+	addQuery := `UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '"` + profileName + `"', TRUE) WHERE data->>'date'='"` + date + `"';`
 
 	result, err := db.Exec(addQuery)
 	if err != nil {
