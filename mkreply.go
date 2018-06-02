@@ -15,7 +15,6 @@ const (
 	sessionDay = 4 //usually play on Thursday
 )
 
-//Ideally, this function should query a DB, get a good answer as the reply
 func reply(message string, event *linebot.Event, bot *linebot.Client) (reply string) {
 	date := getNextSession()
 	replyInfo := ReplyInfo{"", ""}
@@ -30,14 +29,14 @@ func reply(message string, event *linebot.Event, bot *linebot.Client) (reply str
 		replyInfo.TplID = "list"
 		reply = assembleList(replyInfo, resultset)
 	case "+1":
-		if event.Source.GroupID != "" {
-			//group add
+		if event.Source.GroupID != "" { //+1 in group
 			profile, err := bot.GetGroupMemberProfile(event.Source.GroupID, event.Source.UserID).Do()
 			if err != nil {
 				log.Print(err)
 			}
-			replyInfo.Name = profile.DisplayName
-			ex := checkExists(profile.DisplayName, date)
+
+			//replyInfo.Name = profile.DisplayName
+			ex := checkExists(profile.DisplayName, date) //check if the name exists in list
 			if ex != false {
 				//run DB update and return in64, 1=added, 0=failed
 				resultBool := mknote.Add(profile.DisplayName, date)

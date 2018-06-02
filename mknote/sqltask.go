@@ -34,21 +34,46 @@ func InitDB() {
 }
 
 //Add the profile on the list
-func Add(profileName string, date string) int64 {
-	//STEP 1: check for duplication
-	addQuery := `UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '"` + profileName + `"', TRUE) WHERE data->>'date'='` + date + `';`
-
-	result, err := db.Exec(addQuery)
+func Add(profileName string, date string) (addResult int64) {
+	//STEP 1: check if the date exists
+	checkDate := `select exists(SELECT 1 FROM reservation WHERE data @> '{"date": "` + date + `"}');`
+	rows, err := db.Query(checkDate)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	rowCount, err := result.RowsAffected()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(rowCount)
 
-	return rowCount
+	var checkResult string
+	for rows.Next() {
+		err := rows.Scan(&checkResult)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(checkResult)
+	}
+	if checkResult == "false" {
+		createEvent := `INSERT INTO reservation(data) values('{"date":"` + date + `", "name_list": ["` + profileName + `"], "court_count": "1"}');`
+		_, err = db.Exec(createEvent)
+		if err != nil {
+			panic(err)
+		}
+		addResult = 1
+	} else {
+		addName := `UPDATE reservation SET data = jsonb_set(data, '{name_list, 999999}', '"` + profileName + `"', TRUE) WHERE data->>'date'='` + date + `';`
+
+		result, err := db.Exec(addName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		rowCount, err := result.RowsAffected()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(rowCount)
+
+		addResult = rowCount
+	}
+	return addResult
+
 }
 
 func del(profile string) {
