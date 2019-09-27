@@ -12,4 +12,4 @@
 *.out
 
 #ignore vendor when push to Github, but remember to comment out when push to Heroku
-vendor/
+vendor/*
