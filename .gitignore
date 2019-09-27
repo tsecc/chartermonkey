@@ -11,4 +11,5 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-vendor/
+#ignore vendor when push to Github, but remember to comment out when push to Heroku
+vendor/*
